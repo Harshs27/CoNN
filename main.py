@@ -26,7 +26,8 @@ from model import CoNN
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Running Cooperative Neural Network (CoNN-sLDA) for document classification')
+parser = argparse.ArgumentParser(description='Running Cooperative Neural Network (CoNN-sLDA)\
+                                                                 for document classification')
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -39,18 +40,19 @@ def str2bool(v):
 parser.add_argument('--MODEL_NAME', type=str, default='CoNN', 
                     help='Using the CoNN-sLDA model')
 parser.add_argument('--USE_CUDA', type=str2bool, nargs='?', default=True, 
-                    help='use GPUs if available, uses all available gpu by default::: If you want to run on specific GPUs, use CUDA_VISIBLE_DEVICES')
+                    help='use GPUs if available, uses all available gpu by default:\
+                           If you want to run on specific GPUs, use CUDA_VISIBLE_DEVICES')
 parser.add_argument('--PREP_DATA', type=str2bool, nargs='?', default=False, 
                     help='preprocess the data, the script saves the processed data for later reuse')
 parser.add_argument('--DO_CV', type=str2bool, nargs='?', default=True, 
                     help='do cross validation')
 parser.add_argument('--K_FOLD', type=int, default=5,
                     help='K fold validation')
-parser.add_argument('--NUM_BATCHES', type=int, default=1600,
+parser.add_argument('--NUM_BATCHES', type=int, default=3000,
                     help='Number of batches for training')
 parser.add_argument('--BATCH_SIZE', type=int, default=100,
                     help='Batch size')
-parser.add_argument('--DROPOUT', type=float, default=0.01,
+parser.add_argument('--DROPOUT', type=float, default=0.1,
                     help='dropout for regularization')
 parser.add_argument('--IMBALANCE_HANDLING', type=str2bool, nargs='?', default=False, 
                     help='apply cost-sensitive learning to the loss function')
@@ -58,9 +60,9 @@ parser.add_argument('--EVALUATE_TEST', type=str2bool, nargs='?', default=True,
                     help='Report the results on validation dataset at EVALUATE_EVERY iterations')
 parser.add_argument('--EVALUATE_EVERY', type=int, default=500,
                     help='evaluate at intervals of EVALUATE_EVERY epochs')
-parser.add_argument('--hilbert_DIM', type=int, default=20,
+parser.add_argument('--hilbert_DIM', type=int, default=10,
                     help='The size of the hilbert space embedding vector')
-parser.add_argument('--WORD2VEC', type=int, default=20,
+parser.add_argument('--WORD2VEC', type=int, default=10,
                     help='the size of word2vec embeddings')
 parser.add_argument('--num_CLASS', type=int, default=1,
                     help='number of classes for classification: 1 = binary classification')
@@ -140,7 +142,6 @@ def get_CV_data(data_cleaned, train_index, test_index, TEST_FLAG=0, dictionary='
         train_num_words.append(temp_len)
         train_cleaned_data.append(only_known_words)
         train_labels.append(d[0])
-#        train_cleaned_data.append(doc2idx(dictionary, document=d[2], unknown_word_index=VOCAB_SIZE-1))
     test_cleaned_data = []
     test_labels = []
     test_num_words = []
@@ -153,11 +154,11 @@ def get_CV_data(data_cleaned, train_index, test_index, TEST_FLAG=0, dictionary='
         test_cleaned_data.append(only_known_words)
         test_labels.append(d[0])
 
-#    print(len(test_cleaned_data), len(test_labels))
-    return np.array(train_cleaned_data), np.array(train_labels), np.array(train_num_words), dictionary, np.array(test_cleaned_data), np.array(test_labels), np.array(test_num_words)
+    return np.array(train_cleaned_data), np.array(train_labels), np.array(train_num_words),\
+             dictionary, np.array(test_cleaned_data), np.array(test_labels), np.array(test_num_words)
 
 
-def vectorized_sample_data(D, y, num_words_array, num_samples, weight_vector='balanced', TESTING_FLAG=False): # maybe use pandas in future
+def vectorized_sample_data(D, y, num_words_array, num_samples, weight_vector='balanced', TESTING_FLAG=False): 
     # do sampling without replacement. 
     if TESTING_FLAG == False:
         S_indices = np.random.choice(range(len(D)), num_samples, replace=False)
@@ -171,12 +172,15 @@ def vectorized_sample_data(D, y, num_words_array, num_samples, weight_vector='ba
     else :
         if TESTING_FLAG == True: # make data volatile (do not store the grads and all in GPU memory)
             Xs = Variable(torch.from_numpy(D[S_indices, :].astype(np.int, copy=False)).cuda(), volatile=True)
-            ys = Variable(torch.from_numpy(y[S_indices].astype(np.float, copy=False)).type(torch.FloatTensor).cuda(), volatile=True)
+            ys = Variable(torch.from_numpy(y[S_indices].astype(np.float, copy=False))\
+                                                              .type(torch.FloatTensor).cuda(), volatile=True)
             weight_vector = 'dummy'#Variable(torch.from_numpy(weight_vector[S_indices].astype(np.float, copy=False)).type(torch.FloatTensor).cuda())
         else:   
             Xs = Variable(torch.from_numpy(D[S_indices, :].astype(np.int, copy=False)).cuda())
-            ys = Variable(torch.from_numpy(y[S_indices].astype(np.float, copy=False)).type(torch.FloatTensor).cuda())
-            weight_vector = Variable(torch.from_numpy(weight_vector[S_indices].astype(np.float, copy=False)).type(torch.FloatTensor).cuda())
+            ys = Variable(torch.from_numpy(y[S_indices].astype(np.float, copy=False))\
+                                                                             .type(torch.FloatTensor).cuda())
+            weight_vector = Variable(torch.from_numpy(weight_vector[S_indices].astype(np.float, copy=False))\
+                                                                             .type(torch.FloatTensor).cuda())
         Xs_num_words = num_words_array[S_indices].astype(np.int, copy=False)
     return Xs, ys, Xs_num_words, weight_vector
 
@@ -277,7 +281,8 @@ def main():
             loss_plot[k] = []
             auc_plot[k] = []
             #******************** get the train and test dataset
-            train_cleaned_data, train_labels, train_num_words, dictionary, valid_cleaned_data, valid_labels, valid_num_words = get_CV_data(cleaned_data, train_index, valid_index)
+            train_cleaned_data, train_labels, train_num_words, dictionary, valid_cleaned_data, valid_labels, valid_num_words\
+                                                                        = get_CV_data(cleaned_data, train_index, valid_index)
             print('value counts for valid set')
             bc = np.bincount(train_labels)
             ii = np.nonzero(bc)[0]
@@ -297,7 +302,8 @@ def main():
             # Re-initialise the model
             # initialise the parameters of the model
             if args.MODEL_NAME is 'CoNN':
-                model = CoNN(args.MODEL_NAME, args.hilbert_DIM, args.WORD2VEC, VOCAB_SIZE, TRUNC_LENGTH, dropout_p=args.DROPOUT, USE_CUDA=args.USE_CUDA, num_CLASS=args.num_CLASS)
+                model = CoNN(args.MODEL_NAME, args.hilbert_DIM, args.WORD2VEC, VOCAB_SIZE, TRUNC_LENGTH, 
+                                        dropout_p=args.DROPOUT, USE_CUDA=args.USE_CUDA, num_CLASS=args.num_CLASS)
             else: 
                 print("model not present")
 
@@ -306,16 +312,11 @@ def main():
                 print('WRAPPING around DataParallel.. ')
                 model = nn.DataParallel(model)
             if args.MODEL_NAME is 'CoNN' and args.optimizer=='adam':
-    #            optimizer = torch.optim.Adadelta(model.parameters(), lr=learning_rate, rho=0.9, eps=1e-06, weight_decay=0)
-                optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)#, amsgrad=False)
-    #            optimizer = torch.optim.RMSprop(model.parameters(), lr=learning_rate, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0.95, centered=False)
-    #            optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,  dampening=0, weight_decay=0, nesterov=False)
+                optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), \
+                                                                              eps=1e-08, weight_decay=0)
 
             print('Adding Scheduler')
-    #        scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=10, verbose=False, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08)
-    #        scheduler =torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=10, verbose=False, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08)
             scheduler = MultiStepLR(optimizer, milestones=[1000, 1200, 1500, 1800, 2400, 3000, 3500], gamma=0.5)
-    #        scheduler = ExponentialLR(optimizer, gamma=0.1)
 
             print('K_fold = ', k)
             for t in range(1, num_batches+1): # change to number of epochs\
@@ -330,15 +331,18 @@ def main():
                 #**************************TRAINING********************************************
                 #******************************************************************************
                 # sample docs from train_cleaned_data
-                Xs, ys, Xs_num_words, batch_weight_vector = vectorized_sample_data(train_cleaned_data, train_labels, train_num_words, batch_size, weight_vector) # returns  
+                Xs, ys, Xs_num_words, batch_weight_vector = vectorized_sample_data(train_cleaned_data, train_labels,\
+                                                                            train_num_words, batch_size, weight_vector) 
                 optimizer.zero_grad()   # zero the gradient buffers
                 output = model.forward(Xs, Xs_num_words, args.ITERATIONS)# DROPOUT of p 
-                loss = F.binary_cross_entropy_with_logits(output.view(len(ys)), ys, weight=batch_weight_vector) # NOTE: use weights for cost sensitive learning
+                loss = F.binary_cross_entropy_with_logits(output.view(len(ys)), ys, weight=batch_weight_vector) 
+                # NOTE: use weights for cost sensitive learning
                 # calculating the accuracy
                 ys_actual   = ys.data.cpu().numpy()
                 scores_pred = output.data.cpu().numpy()
                 auc         = get_auc(ys_actual, scores_pred) 
-                print('time since start ', time_since(start, float(t)/float(num_batches)),'(%d %d%%)'%(t, float(t)/float(num_batches)*100 ), 'loss', loss.data.cpu().numpy(), ' auc ', auc)
+                print('time since start ', time_since(start, float(t)/float(num_batches)),'(%d %d%%)'\
+                                  %(t, float(t)/float(num_batches)*100 ), 'loss', loss.data.cpu().numpy(), ' auc ', auc)
                 loss_plot[k].append(loss.data.cpu().numpy())
                 auc_plot[k].append(auc)
                 loss.backward()
@@ -354,18 +358,26 @@ def main():
                 if args.EVALUATE_TEST == True and t%args.EVALUATE_EVERY==0: # evaluate the model after every 100 iterations
                     if t == args.EVALUATE_EVERY:
                         valid_cleaned_data = numpy_fillna(valid_cleaned_data)
-                        valid_cleaned_data, valid_num_words = truncate_data(valid_cleaned_data, valid_num_words, TRUNC_LENGTH) # max_words in a Document
-                        Xt, yt, Xt_num_words, _ = vectorized_sample_data(valid_cleaned_data, valid_labels, valid_num_words, 'dummy_len(valid_index)', TESTING_FLAG=True, weight_vector='dummy') # Hoping that it runs for all the validation set at once!!
+                        valid_cleaned_data, valid_num_words = truncate_data(valid_cleaned_data, valid_num_words,\
+                                                                                                     TRUNC_LENGTH) 
+                        Xt, yt, Xt_num_words, _ = vectorized_sample_data(valid_cleaned_data, \
+                                                  valid_labels, valid_num_words, 'dummy_len(valid_index)',\
+                                                                  TESTING_FLAG=True, weight_vector='dummy') 
+                        # Hoping that it runs for all the validation set at once!!
                     # NOTE: maintaining the same batch size for validation too
                     output = []
                     num_valid_batches = int(np.ceil(len(yt)/batch_size))
                     for b in range(num_valid_batches):
                         if b == num_valid_batches-1:
-                            batch_output = model.forward(Xt[batch_size*b:, :], Xt_num_words[batch_size*b:], args.ITERATIONS, TEST_FLAG=1)
-                            output.append(batch_output.data.cpu().numpy()) # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
+                            batch_output = model.forward(Xt[batch_size*b:, :],\
+                                                  Xt_num_words[batch_size*b:], args.ITERATIONS, TEST_FLAG=1)
+                            output.append(batch_output.data.cpu().numpy()) 
+                            # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
                         else:
-                            batch_output = model.forward(Xt[batch_size*b:batch_size*(b+1), :], Xt_num_words[batch_size*b:batch_size*(b+1)], args.ITERATIONS, TEST_FLAG=1)
-                            output.append(batch_output.data.cpu().numpy()) # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
+                            batch_output = model.forward(Xt[batch_size*b:batch_size*(b+1), :],\
+                                          Xt_num_words[batch_size*b:batch_size*(b+1)], args.ITERATIONS, TEST_FLAG=1)
+                            output.append(batch_output.data.cpu().numpy()) 
+                            # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
                     output = list(itertools.chain.from_iterable(output))
                     total_valid_output = Variable(torch.from_numpy(np.array(output)).type(torch.cuda.FloatTensor))
                     loss = F.binary_cross_entropy_with_logits(total_valid_output.view(len(yt)), yt, weight=None)
@@ -373,7 +385,8 @@ def main():
                     yt_actual   = yt.data.cpu().numpy()
                     scores_pred = output#.data.cpu().numpy()
                     auc         = get_auc(yt_actual, scores_pred) 
-                    print('Valid loss for k =', k, ' Iteration num ', t, '\n loss ', loss.data.cpu().numpy()[0], '\n auc ', auc)
+                    print('Valid loss for k =', k, ' Iteration num ', t, '\n loss ', \
+                                                   loss.data.cpu().numpy()[0], '\n auc ', auc)
                 #******************************************************************************
                 #*****************************END**********************************************
 
@@ -387,17 +400,25 @@ def main():
             #******************************************************************************
             print('checking loss on validation set')
             valid_cleaned_data = numpy_fillna(valid_cleaned_data)
-            valid_cleaned_data, valid_num_words = truncate_data(valid_cleaned_data, valid_num_words, TRUNC_LENGTH) # max_words in a Document
-            Xs, ys, Xs_num_words, _ = vectorized_sample_data(valid_cleaned_data, valid_labels, valid_num_words, 'dummy_len(valid_index)', TESTING_FLAG=True, weight_vector='dummy') # Hoping that it runs for all the validation set at once!!
+            valid_cleaned_data, valid_num_words = truncate_data(valid_cleaned_data,\
+                                                              valid_num_words, TRUNC_LENGTH) # max_words in a Document
+            Xs, ys, Xs_num_words, _ = vectorized_sample_data(valid_cleaned_data,\
+                                       valid_labels, valid_num_words, 'dummy_len(valid_index)',\
+                                        TESTING_FLAG=True, weight_vector='dummy') 
+            # Hoping that it runs for all the validation set at once!!
             output = []
             num_valid_batches = int(np.ceil(len(ys)/batch_size))
             for b in range(num_valid_batches):
                 if b == num_valid_batches-1:
-                    batch_output = model.forward(Xs[batch_size*b:, :], Xs_num_words[batch_size*b:], args.ITERATIONS, TEST_FLAG=1)
-                    output.append(batch_output.data.cpu().numpy()) # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
+                    batch_output = model.forward(Xs[batch_size*b:, :],\
+                                       Xs_num_words[batch_size*b:], args.ITERATIONS, TEST_FLAG=1)
+                    output.append(batch_output.data.cpu().numpy()) 
+                    # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
                 else:
-                    batch_output = model.forward(Xs[batch_size*b:batch_size*(b+1), :], Xs_num_words[batch_size*b:batch_size*(b+1)], args.ITERATIONS, TEST_FLAG=1)
-                    output.append(batch_output.data.cpu().numpy()) # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
+                    batch_output = model.forward(Xs[batch_size*b:batch_size*(b+1), :],\
+                                  Xs_num_words[batch_size*b:batch_size*(b+1)], args.ITERATIONS, TEST_FLAG=1)
+                    output.append(batch_output.data.cpu().numpy()) 
+                    # NOTE: default dropout is '0' for valid and test case! (as we need to take the ensemble of DNNs)
             output = list(itertools.chain.from_iterable(output))
             total_valid_output = Variable(torch.from_numpy(np.array(output)).type(torch.cuda.FloatTensor))
             loss = F.binary_cross_entropy_with_logits(total_valid_output.view(len(ys)), ys, weight=None)
