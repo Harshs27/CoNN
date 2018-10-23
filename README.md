@@ -45,7 +45,7 @@ Contributing
 ------------
 Issues can be reported at [issues section](https://github.com/Harshs27/CoNN/issues).
 
-If you want to discuss or contribute, please feel free to raise an issue or mail.
+If you want to discuss or contribute, please feel free to drop a mail or raise an issue.
 
 License
 =======
