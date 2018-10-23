@@ -30,12 +30,14 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
 from sklearn import svm, metrics
 
+print('All modules imported')
+
 USE_CUDA = True # Runs on all the CUDA_VISIBLE_DEVICES=0,1,2,3  
 PREP_DATA =  False # True
 MODEL_NAME = 'nn_deep'#'deep'# 'basic'
 K_FOLD = 5
 DROPOUT =0.01#0.1#0.3# 0.2# 0.2#0.5
-NUM_BATCHES = 3000# 400*2
+NUM_BATCHES = 400#3000# 400*2
 BATCH_SIZE = 100 # keep this fixed
 DO_CV = True # don't do K-fold CV
 EVALUATE_TEST = True

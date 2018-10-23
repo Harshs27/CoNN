@@ -13,7 +13,7 @@ Dependencies
 The file '342k\_multisent.py' is tested on the following 
 
 - Python 3
-- Pytorch 0.3.0 
+- Pytorch 0.2.0 
 - Numpy 
 
 Running the script for Multi-Domain Sentiment Dataset
