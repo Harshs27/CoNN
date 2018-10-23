@@ -1,17 +1,12 @@
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.stem.porter import *
+from glob import glob
+import string, os
+from gensim import corpora, models, similarities
 
-def setup():
-    with open('stopwords', encoding='utf-8', errors='ignore', mode='r') as myfile:
-        extra_stopwords = myfile.read().replace('\n', ' ').split(' ')[:-1]
-    stop = set(stopwords.words('english'))
-    # update more stopwords
-    stop.update(extra_stopwords)
-    #stop.update(['would', 'like', 'know', 'also', 'may', 'use', 'dont', 'get', 'com', 'write', 'want', 'edu', 'articl', 'article'])
-    exclude = set(string.punctuation)
-    lemma = WordNetLemmatizer()
-    stemmer = PorterStemmer()
-    return
 
-def clean(doc):
+def clean(doc, stop, exclude, lemma, stemmer):
     stop_free = " ".join([i for i in doc.lower().split() if i not in stop and not i.isdigit()])
     new_stop_free = " ".join(re.findall(r"[\w']+", stop_free))
     punc_free = ''.join(ch for ch in new_stop_free if ch not in exclude)
@@ -38,7 +33,15 @@ def doc2idx(dictionary, document, unknown_word_index=-1):
 
 
 def prepare_data(basefile):
-    setup()
+    with open('stopwords', encoding='utf-8', errors='ignore', mode='r') as myfile:
+        extra_stopwords = myfile.read().replace('\n', ' ').split(' ')[:-1]
+    stop = set(stopwords.words('english'))
+    # update more stopwords
+    stop.update(extra_stopwords)
+    #stop.update(['would', 'like', 'know', 'also', 'may', 'use', 'dont', 'get', 'com', 'write', 'want', 'edu', 'articl', 'article'])
+    exclude = set(string.punctuation)
+    lemma = WordNetLemmatizer()
+    stemmer = PorterStemmer()
     data_cleaned = [] # format: <label, text>
     count = 0
     for path in sorted(glob(basefile+'/*')):
@@ -61,7 +64,7 @@ def prepare_data(basefile):
                     for c in range(wc): # count in wc
                         sentence.append(w)
                 sentence = ' '.join(sentence)
-                data_cleaned.append([label, clean(sentence).split()])
+                data_cleaned.append([label, clean(sentence, stop, exclude, lemma, stemmer).split()])
                 count += 1
 #                print(complete_data)
     print('total review texts ', count)
