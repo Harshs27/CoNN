@@ -1,6 +1,6 @@
-CoNN
+Cooperative Neural Networks - CoNN
 =====
-Cooperative Neural Networks: Exploiting prior independence structure for improved classification  
+Cooperative Neural Networks(CoNN) : Exploiting prior independence structure for improved classification  
 (also known as Joint Constraint Networks)  
 
 This work is published in NIPS 2018 [link](https://nips.cc/Conferences/2018/Schedule?showEvent=11409) 
@@ -15,6 +15,7 @@ The file '342k\_multisent.py' is tested on the following
 - Python 3
 - Pytorch 0.2.0 
 - Numpy 
+- nltk (preprocessing text)
 
 Running the script for Multi-Domain Sentiment Dataset
 =============
