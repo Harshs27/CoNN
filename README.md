@@ -21,9 +21,9 @@ Running the script for Multi-Domain Sentiment Dataset
 Getting the data [link](http://www.cs.jhu.edu/~mdredze/datasets/sentiment/):
 ```
 $ wget http://www.cs.jhu.edu/~mdredze/datasets/sentiment/unprocessed.tar.gz
+$ tar -xvzf unprocessed.tar.gz
 ```
-Python command:
-:
+Running the script:
 ```
 $ python 342k_multisent.py
 ```
