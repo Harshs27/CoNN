@@ -37,7 +37,7 @@ PREP_DATA =  False # True
 MODEL_NAME = 'nn_deep'#'deep'# 'basic'
 K_FOLD = 5
 DROPOUT =0.01#0.1#0.3# 0.2# 0.2#0.5
-NUM_BATCHES = 400#3000# 400*2
+NUM_BATCHES = 3000#4*400#3000# 400*2
 BATCH_SIZE = 100 # keep this fixed
 DO_CV = True # don't do K-fold CV
 EVALUATE_TEST = True
@@ -47,8 +47,8 @@ IMBALANCE_HANDLING = False#True
 
 #"""
 # GLOBAL Variabl3es
-hilbert_DIM = 5 #60#10# 40#30 #20#5#10#20
-WORD2VEC = 5#60# 10#40# 30# 20# 5#10#20 #hilbert_DIM
+hilbert_DIM = 20#5 #60#10# 40#30 #20#5#10#20
+WORD2VEC = 20#5#60# 10#40# 30# 20# 5#10#20 #hilbert_DIM
 #K_topics = 10
 num_CLASS = 1 #  
 ITERATIONS = 1#2#5# 10
