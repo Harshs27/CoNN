@@ -52,7 +52,7 @@ parser.add_argument('--NUM_BATCHES', type=int, default=3000,
                     help='Number of batches for training')
 parser.add_argument('--BATCH_SIZE', type=int, default=100,
                     help='Batch size')
-parser.add_argument('--DROPOUT', type=float, default=0.1,
+parser.add_argument('--DROPOUT', type=float, default=0.01,
                     help='dropout for regularization')
 parser.add_argument('--IMBALANCE_HANDLING', type=str2bool, nargs='?', default=False, 
                     help='apply cost-sensitive learning to the loss function')
@@ -60,9 +60,9 @@ parser.add_argument('--EVALUATE_TEST', type=str2bool, nargs='?', default=True,
                     help='Report the results on validation dataset at EVALUATE_EVERY iterations')
 parser.add_argument('--EVALUATE_EVERY', type=int, default=500,
                     help='evaluate at intervals of EVALUATE_EVERY epochs')
-parser.add_argument('--hilbert_DIM', type=int, default=10,
+parser.add_argument('--hilbert_DIM', type=int, default=20,
                     help='The size of the hilbert space embedding vector')
-parser.add_argument('--WORD2VEC', type=int, default=10,
+parser.add_argument('--WORD2VEC', type=int, default=20,
                     help='the size of word2vec embeddings')
 parser.add_argument('--num_CLASS', type=int, default=1,
                     help='number of classes for classification: 1 = binary classification')
