@@ -1,11 +1,11 @@
 Cooperative Neural Networks - CoNN
 =====
 Cooperative Neural Networks(CoNN) : Exploiting prior independence structure for improved classification  
-(also known as Joint Constraint Networks)  
+(also known as Joint Constraint Networks).  
 
-This work is published in NIPS 2018 [link](https://nips.cc/Conferences/2018/Schedule?showEvent=11409) 
+This work is published in NIPS 2018 [link](https://nips.cc/Conferences/2018/Schedule?showEvent=11409). 
 
-I am working on a [Blog](http://blog.harshshrivastava.com/2018/10/cooperative-neural-networks-conn-an-overview/) to highlight the main contributions of this work 
+I am working on a [Blog](http://blog.harshshrivastava.com/2018/10/cooperative-neural-networks-conn-an-overview/) to highlight the novelties and main contributions of this work.  
 
 Dependencies
 =============
