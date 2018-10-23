@@ -26,7 +26,7 @@ from model import CoNN
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Running Cooperative Neural Network for document classification')
+parser = argparse.ArgumentParser(description='Running Cooperative Neural Network (CoNN-sLDA) for document classification')
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):

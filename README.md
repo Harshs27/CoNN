@@ -10,7 +10,7 @@ I am working on a [Blog](http://blog.harshshrivastava.com/2018/10/cooperative-ne
 Dependencies
 =============
 
-The file '342k\_multisent.py' is tested on the following 
+The file 'main.py' is tested on the following 
 
 - Python 3
 - Pytorch 0.2.0 
@@ -18,7 +18,7 @@ The file '342k\_multisent.py' is tested on the following
 - nltk (preprocessing text)
 - P100 GPUs
 
-Running the script for Multi-Domain Sentiment Dataset
+Running CoNN-sLDA for Multi-Domain Sentiment Dataset
 =============
 Getting the data [link](http://www.cs.jhu.edu/~mdredze/datasets/sentiment/):
 ```
@@ -32,26 +32,30 @@ $ python main.py
 with the default settings, I got the Area under ROC as (5 fold CV) =  
 
 
-Development
+Development 
 ============
 
 Code
 ----
 
-I will be shortly updating the code with the following additions  
+I will be updating the repo with the following additions  
 
 - Script compatible with latest Pytorch version  
-- Script for latest Tensorflow version
+- Script for latest Tensorflow version 
 
 
 Contributing
 ------------
 Issues can be reported at [issues section](https://github.com/Harshs27/CoNN/issues).
 
-If you want to discuss or contribute, please feel free to drop a mail or raise an issue.
+If you want to discuss or contribute, please feel free to drop a mail or raise an issue :) 
+
+
+Collaboration
+-------------
+I will be happy to discuss and collaborate, if you want to use CoNN or its variant for some other Graphical models!
+
 
 License
 =======
 CoNN is released under Apache License. You can read about our license at [here](https://github.com/Harshs27/CoNN/blob/master/LICENSE)
-
-
