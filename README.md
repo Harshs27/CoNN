@@ -29,7 +29,9 @@ Running the script:
 ```
 $ python main.py
 ```
-with the default settings, I got the Area under ROC as (5 fold CV) =  
+with the default argparse settings, I get roughly 
+ 
+Avg auc(5 fold CV) =  0.9213456403902894 with std dev = 0.007758676219792392 
 
 
 Development 
