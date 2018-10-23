@@ -1,8 +1,14 @@
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
 #  operations are DATAPARALLEL 
 class CoNN(torch.nn.Module): # version using inbuilt torch nn modules
-    def __init__(self, name, hilbert_DIM, WORD2VEC, VOCAB_SIZE, TRUNC_LENGTH, dropout_p=DROPOUT): # initializing all the weights here
+    def __init__(self, name, hilbert_DIM, WORD2VEC, VOCAB_SIZE, TRUNC_LENGTH, dropout_p=0, USE_CUDA=True, num_CLASS=1): # initializing all the weights here
         super(CoNN, self).__init__() # initializing the nn.module
         self.WORD2VEC = WORD2VEC
+        self.hilbert_DIM = hilbert_DIM
         self.dropout_p  = dropout_p # randomly zeros some of the elements with probabaility = p: No dropout by default
         self.TRUNC_LENGTH = TRUNC_LENGTH
         if USE_CUDA == False: # shift to GPU
@@ -30,12 +36,12 @@ class CoNN(torch.nn.Module): # version using inbuilt torch nn modules
         # Vectorized implementation
         num_docs = X.data.shape[0]
         max_words = X.data.shape[1]
-        mu_theta = Variable(torch.from_numpy(np.zeros((num_docs, hilbert_DIM))).type(self.dtype)) # should be faster ???
-        mu_z = Variable(torch.from_numpy(np.zeros((num_docs, max_words, hilbert_DIM))).type(self.dtype))
+        mu_theta = Variable(torch.from_numpy(np.zeros((num_docs, self.hilbert_DIM))).type(self.dtype)) # should be faster ???
+        mu_z = Variable(torch.from_numpy(np.zeros((num_docs, max_words, self.hilbert_DIM))).type(self.dtype))
         word_embedding = self.embed_dict(X).view(num_docs, max_words, self.WORD2VEC) #DxNxV
 #        word_embedding = self.dropout(word_embedding)
         for t in range(ITERATIONS):
-            mu_theta_clone = mu_theta.clone().view(num_docs,1, hilbert_DIM).repeat(1, max_words, 1).view(num_docs, max_words, hilbert_DIM)#DxH--> DxNxH
+            mu_theta_clone = mu_theta.clone().view(num_docs,1, self.hilbert_DIM).repeat(1, max_words, 1).view(num_docs, max_words, self.hilbert_DIM)#DxH--> DxNxH
             concat_for_mu_z = torch.cat((word_embedding, mu_theta_clone), 2) # concat along last dim: should be DxNx(V+H)
             # mu_z --> DxNxH
 #            mu_z = F.tanh(self.fc3_z(F.tanh(self.fc2_z(F.tanh(self.fc1_z_bn(self.fc1_z(concat_for_mu_z)))))))

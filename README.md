@@ -14,8 +14,9 @@ The file '342k\_multisent.py' is tested on the following
 
 - Python 3
 - Pytorch 0.2.0 
-- Numpy 
+- Numpy 1.15.1 
 - nltk (preprocessing text)
+- P100 GPUs
 
 Running the script for Multi-Domain Sentiment Dataset
 =============
@@ -26,8 +27,10 @@ $ tar -xvzf unprocessed.tar.gz
 ```
 Running the script:
 ```
-$ python 342k_multisent.py
+$ python main.py
 ```
+with the default settings, I got the Area under ROC as (5 fold CV) =  
+
 
 Development
 ============
@@ -37,7 +40,6 @@ Code
 
 I will be shortly updating the code with the following additions  
 
-- Modular form of the code (separating the preprocessing section, model etc.)
 - Script compatible with latest Pytorch version  
 - Script for latest Tensorflow version
 

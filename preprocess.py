@@ -24,12 +24,6 @@ def clean(doc, stop, exclude, lemma, stemmer):
     stemmed_stop_free = " ".join([i for i in stemmed.split() if i not in stop])
     return stemmed_stop_free
 
-def doc2idx(dictionary, document, unknown_word_index=-1):
-        if isinstance(document, string_types):
-            raise TypeError("doc2idx expects an array of unicode tokens on input, not a single string")
-
-        document = [word if isinstance(word, str) else unicode(word, 'utf-8') for word in document]
-        return [dictionary.token2id.get(word, unknown_word_index) for word in document]
 
 
 def prepare_data(basefile):
