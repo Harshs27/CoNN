@@ -48,11 +48,11 @@ parser.add_argument('--DO_CV', type=str2bool, nargs='?', default=True,
                     help='do cross validation')
 parser.add_argument('--K_FOLD', type=int, default=5,
                     help='K fold validation')
-parser.add_argument('--NUM_BATCHES', type=int, default=3000,#1200, #3000,
+parser.add_argument('--NUM_BATCHES', type=int, default=3000, #3000,#1200, #3000,
                     help='Number of batches for training')
 parser.add_argument('--BATCH_SIZE', type=int, default=100,
                     help='Batch size')
-parser.add_argument('--DROPOUT', type=float, default=0,
+parser.add_argument('--DROPOUT', type=float, default=0.0,
                     help='dropout for regularization')
 parser.add_argument('--IMBALANCE_HANDLING', type=str2bool, nargs='?', default=False, 
                     help='apply cost-sensitive learning to the loss function')
@@ -293,7 +293,7 @@ def main():
 
             train_cleaned_data = numpy_fillna(train_cleaned_data)
 #            TRUNC_LENGTH = int(2*np.mean(train_num_words))
-            TRUNC_LENGTH = int(np.mean(train_num_words)) + 50
+            TRUNC_LENGTH = int(np.mean(train_num_words)) #+ 50
 #            TRUNC_LENGTH = int(np.median(train_num_words))# + 50
             print('Trucation length, done for vectorization of code', TRUNC_LENGTH)
             train_cleaned_data, train_num_words = truncate_data(train_cleaned_data, train_num_words, TRUNC_LENGTH) # max_words in a Document
